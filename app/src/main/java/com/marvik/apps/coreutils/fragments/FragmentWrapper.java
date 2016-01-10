@@ -1,7 +1,7 @@
 package com.marvik.apps.coreutils.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -52,8 +52,8 @@ public abstract class FragmentWrapper extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         onCreateFragment = (OnCreateFragment) getActivity();
         onAttachFragment();
     }
@@ -83,30 +83,79 @@ public abstract class FragmentWrapper extends Fragment {
     }
 
 
+    /**
+     * Called when the fragment is created
+     * @param savedInstanceState
+     */
     public abstract void onCreateFragment(@Nullable Bundle savedInstanceState);
 
+    /**
+     * Used for setting the title of the Activity
+     * @return activity title
+     */
     @Nullable
     public abstract String getActivityTitle();
 
+    /**
+     * Callback used to receive any bundle passed to the fragment when this fragment was created
+     */
     public abstract void receiveBundle();
 
+    /**
+     * Used for creating a custom view for the fragment
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     */
     @Nullable
     public abstract void onCreateFragmentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
 
+    /**
+     * Callback used to hold methods that consume all the contents of the bundle passed to the fragment
+     */
     public abstract void consumeBundle();
 
+    /**
+     * Called when a fragment is first attached to its context.
+     * {#onCreate(Bundle)} will be called after this.
+     */
     public abstract void onAttachFragment();
 
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally
+     * tied to {Activity#onResume() Activity.onResume} of the containing
+     * Activity's lifecycle.
+     */
     public abstract void onResumeFragment();
 
+    /**
+     * Called to provide implementation to initiate the syncing of the contents of the current fragment
+     */
     public abstract void performPartialSync();
 
+    /**
+     * Called when only the contents of the current fragment are synced
+     */
     public abstract void onPerformPartialSync();
 
+    /**
+     * Called when the Fragment is no longer resumed.  This is generally
+     * tied to  Activity#onPause() Activity.onPause} of the containing
+     * Activity's lifecycle.
+     */
     public abstract void onPauseFragment();
 
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after onStop()} and before onDetach()}.
+     */
     public abstract void onDestroyFragment();
 
+    /**
+     * Returns the layout resource id for the layout used to populate the view for this fragment
+     * @return the layout resource id
+     */
     public abstract int getParentLayout();
 
 

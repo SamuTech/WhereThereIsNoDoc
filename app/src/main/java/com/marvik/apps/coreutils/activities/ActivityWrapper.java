@@ -16,9 +16,14 @@ public abstract class ActivityWrapper extends AppCompatActivity implements View.
 
     private Utils utils;
 
+    /**
+     *  Utils#getUtils
+     * @return an instance of the utils class
+     */
     public Utils getUtils() {
         return utils;
     }
+
 
 
     @Override
@@ -52,12 +57,26 @@ public abstract class ActivityWrapper extends AppCompatActivity implements View.
         mActivityTitle.setText(activityTitle);
     }
 
+    /**
+     * Performs initialization of all loaders
+     * Called when the activity is created
+     * @param savedInstanceState
+     */
     protected abstract void onCreateActivity(Bundle savedInstanceState);
 
+    /**
+     * Called when the activity is resumed
+     */
     protected abstract void onResumeActivity();
 
+    /**
+     * Called when the activity is paused
+     */
     protected abstract void onPauseActivity();
 
+    /**
+     * Called when the activity is destroyed
+     */
     protected abstract void onDestroyActivity();
 
     private void initAll() {

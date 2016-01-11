@@ -3,6 +3,7 @@ package com.marvik.apps.wherethereisnodoc.fragments.firstaids;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.marvik.apps.coreutils.fragments.FragmentWrapper;
@@ -49,8 +50,19 @@ public class FirstAidsFragment extends FragmentWrapper {
      */
     @Nullable
     @Override
-    public void onCreateFragmentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateFragmentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        return getActivity().getLayoutInflater().inflate(getParentLayout(), container, false);
+    }
+
+    /**
+     * Initializes the child views for the fragment being created.
+     *
+     * @param view
+     */
+    @Override
+    public View initFragmentViews(View view) {
+        return null;
     }
 
     /**
@@ -58,6 +70,14 @@ public class FirstAidsFragment extends FragmentWrapper {
      */
     @Override
     public void consumeBundle() {
+
+    }
+
+    /**
+     * Callback called to attach data to all the views in the fragment
+     */
+    @Override
+    public void attachViewsData() {
 
     }
 

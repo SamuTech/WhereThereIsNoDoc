@@ -57,7 +57,7 @@ public class UserAccountsManager {
 
         Bundle extras = new Bundle();
         extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);//Force a manual sync
-        extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);//Make Sync Start Immediatley
+        extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);//Make SyncExecutor Start Immediatley
         ContentResolver.requestSync(account, authority, extras);
 
     }

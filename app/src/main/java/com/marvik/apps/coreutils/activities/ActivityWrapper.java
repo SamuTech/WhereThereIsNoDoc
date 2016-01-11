@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.marvik.apps.coreutils.utils.Utils;
+import com.marvik.apps.wherethereisnodoc.utilities.Utilities;
 
 /**
  * Created by victor on 8/24/2015.
@@ -14,16 +14,16 @@ import com.marvik.apps.coreutils.utils.Utils;
 public abstract class ActivityWrapper extends AppCompatActivity implements View.OnClickListener,
         com.marvik.apps.coreutils.fragments.FragmentWrapper.OnCreateFragment {
 
-    private Utils utils;
+    private Utilities utils;
 
     /**
-     *  Utils#getUtils
+     * Utils#getUtilities
+     *
      * @return an instance of the utils class
      */
-    public Utils getUtils() {
+    public Utilities getUtils() {
         return utils;
     }
-
 
 
     @Override
@@ -60,6 +60,7 @@ public abstract class ActivityWrapper extends AppCompatActivity implements View.
     /**
      * Performs initialization of all loaders
      * Called when the activity is created
+     *
      * @param savedInstanceState
      */
     protected abstract void onCreateActivity(Bundle savedInstanceState);
@@ -80,7 +81,7 @@ public abstract class ActivityWrapper extends AppCompatActivity implements View.
     protected abstract void onDestroyActivity();
 
     private void initAll() {
-        utils = new Utils(ActivityWrapper.this);
+        utils = new Utilities(ActivityWrapper.this);
         attachActionBar();
     }
 

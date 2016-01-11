@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.marvik.apps.coreutils.utils.Utils;
 import com.marvik.apps.wherethereisnodoc.R;
+import com.marvik.apps.wherethereisnodoc.utilities.Utilities;
 
 /**
  * Created by victor on 8/24/2015.
@@ -23,6 +23,7 @@ public abstract class FragmentWrapper extends Fragment {
 
     private OnCreateFragment onCreateFragment;
 
+    private Utilities utilities;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,8 +38,9 @@ public abstract class FragmentWrapper extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         wrapper = getActivity().getLayoutInflater().inflate(R.layout.fragment_wrapper, container, false);
         initViews(wrapper);
-        onCreateFragmentView(inflater, container, savedInstanceState);
+        getContainer().addView(initFragmentViews(onCreateFragmentView(inflater, container, savedInstanceState)));
         consumeBundle();
+        attachViewsData();
         return wrapper;
     }
 
@@ -48,7 +50,7 @@ public abstract class FragmentWrapper extends Fragment {
         super.onResume();
         onResumeFragment();
         performPartialSync();
-        onCreateFragment.setActivityTitle(getActivityTitle());
+       // onCreateFragment.setActivityTitle(getActivityTitle());
     }
 
     @Override
@@ -85,12 +87,14 @@ public abstract class FragmentWrapper extends Fragment {
 
     /**
      * Called when the fragment is created
+     *
      * @param savedInstanceState
      */
     public abstract void onCreateFragment(@Nullable Bundle savedInstanceState);
 
     /**
      * Used for setting the title of the Activity
+     *
      * @return activity title
      */
     @Nullable
@@ -103,17 +107,29 @@ public abstract class FragmentWrapper extends Fragment {
 
     /**
      * Used for creating a custom view for the fragment
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
      */
     @Nullable
-    public abstract void onCreateFragmentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
+    public abstract View onCreateFragmentView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
+
+    /**
+     * Initializes the child views for the fragment being created.
+     */
+
+    public abstract View initFragmentViews(View view);
 
     /**
      * Callback used to hold methods that consume all the contents of the bundle passed to the fragment
      */
     public abstract void consumeBundle();
+
+    /**
+     * Callback called to attach data to all the views in the fragment
+     */
+    public abstract void attachViewsData();
 
     /**
      * Called when a fragment is first attached to its context.
@@ -154,19 +170,20 @@ public abstract class FragmentWrapper extends Fragment {
 
     /**
      * Returns the layout resource id for the layout used to populate the view for this fragment
+     *
      * @return the layout resource id
      */
     public abstract int getParentLayout();
 
 
-    private Utils utils;
+    private Utilities utils;
 
-    public Utils getUtils() {
+    public Utilities getUtilities() {
         return utils;
     }
 
     private void initAll() {
-        utils = new Utils(getActivity());
+        utils = new Utilities(getActivity());
 
     }
 

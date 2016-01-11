@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -23,11 +25,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marvik.apps.coreutils.accounts.UserAccountsManager;
+import com.marvik.apps.coreutils.database.utils.DatabaseUtilities;
 import com.marvik.apps.wherethereisnodoc.R;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -38,6 +45,8 @@ import java.util.Set;
 public class Utils {
 
     private UserAccountsManager userAccountsManager;
+
+    private DatabaseUtilities databaseUtilities;
 
     public Utils(Context context) {
 
@@ -50,15 +59,20 @@ public class Utils {
 
         this.userAccountsManager = new UserAccountsManager(getContext());
 
+        this.databaseUtilities = new DatabaseUtilities(getContext());
     }
 
     private Context getContext() {
         return context;
     }
 
+    public DatabaseUtilities getDatabaseUtilities() {
+        return databaseUtilities;
+    }
 
-
-    public UserAccountsManager getUserAccountsManager() { return userAccountsManager; }
+    public UserAccountsManager getUserAccountsManager() {
+        return userAccountsManager;
+    }
 
 
     private Context context;
@@ -247,12 +261,11 @@ public class Utils {
     }
 
 
-
-    public boolean isNetworkConnected(int notificationId,boolean alert) {
-        return isNetworkConnected(notificationId,alert, "Network Error", "Action Failed! You are not connected to the Internet");
+    public boolean isNetworkConnected(int notificationId, boolean alert) {
+        return isNetworkConnected(notificationId, alert, "Network Error", "Action Failed! You are not connected to the Internet");
     }
 
-    public boolean isNetworkConnected(int notificationId,boolean alert, String title, String message) {
+    public boolean isNetworkConnected(int notificationId, boolean alert, String title, String message) {
         ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
@@ -263,12 +276,12 @@ public class Utils {
         }
 
         if (!networkConnected && alert) {
-            sendNotification(notificationId,title, message);
+            sendNotification(notificationId, title, message);
         }
         return true/*networkConnected*/;
     }
 
-    private void sendNotification(int notificationId,String title, String message) {
+    private void sendNotification(int notificationId, String title, String message) {
         NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder notificationCompat = new NotificationCompat.Builder(getContext());
         notificationCompat.build();
@@ -279,7 +292,7 @@ public class Utils {
         notificationManager.notify(notificationId, notificationCompat.build());
     }
 
-    public Drawable getUserAvatar( String profilePicUrl) throws FileNotFoundException {
+    public Drawable getUserAvatar(String profilePicUrl) throws FileNotFoundException {
 
         if (profilePicUrl == null) {
             return null;
@@ -311,7 +324,6 @@ public class Utils {
     }
 
 
-
     public Bitmap getFileBitmap(String fileUri) {
 
 
@@ -326,7 +338,7 @@ public class Utils {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return bitmap = BitmapFactory.decodeResource(getContext().getResources(),R.mipmap.error_icon);
+        return bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.mipmap.error_icon);
     }
 
     public ProgressDialog showCustomProgressDialog(String title, String message, boolean cancelable) {
@@ -338,4 +350,32 @@ public class Utils {
         return mDialog;
     }
 
+    public InputStream getAsset(String assetPath) throws IOException {
+        return getContext().getResources().getAssets().open(assetPath);
+    }
+
+    public String readAssetsStringStream(String assetFilePath) {
+        try {
+            InputStream inputStream = getAsset(assetFilePath);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuffer stringBuffer = new StringBuffer();
+            String readString = "";
+            while ((readString = bufferedReader.readLine()) != null) {
+                stringBuffer.append(readString);
+            }
+            return stringBuffer.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Resources getResources() {
+        return getContext().getResources();
+    }
+
+    public String getString(@StringRes int resId) {
+        return getResources().getString(resId);
+    }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.marvik.apps.coreutils.activities.ActivityWrapper;
 import com.marvik.apps.wherethereisnodoc.R;
+import com.marvik.apps.wherethereisnodoc.fragments.firstaidsailments.FirstAidAilmentsFragment;
 
 /**
  * Created by victor on 1/10/2016.
@@ -19,6 +20,8 @@ public class MainActivity extends ActivityWrapper {
     @Override
     protected void onCreateActivity(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
+
+        getFragmentManager().beginTransaction().replace(getContainerParentLayoutResId(),new FirstAidAilmentsFragment()).commit();
     }
 
     /**

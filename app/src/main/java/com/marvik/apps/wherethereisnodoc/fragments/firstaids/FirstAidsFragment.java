@@ -5,13 +5,31 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.marvik.apps.coreutils.fragments.FragmentWrapper;
+import com.marvik.apps.wherethereisnodoc.R;
+import com.marvik.apps.wherethereisnodoc.datamodels.firstaids.SimpleFirstAidInfo;
+import com.marvik.apps.wherethereisnodoc.intents.Intents;
+import com.marvik.apps.wherethereisnodoc.listadapters.firstaids.FirstAidsAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by victor on 1/10/2016.
  */
 public class FirstAidsFragment extends FragmentWrapper {
+
+    //first aid id of the selected ailment
+    private int firstAidId;
+
+    //list to hold fragment infos
+    private List<SimpleFirstAidInfo> simpleFirstAidInfoList;
+
+    //listview that contains fragment infos
+    private ListView mLvFirstAid;
+
     /**
      * Called when the fragment is created
      *
@@ -30,7 +48,7 @@ public class FirstAidsFragment extends FragmentWrapper {
     @Nullable
     @Override
     public String getActivityTitle() {
-        return null;
+        return getTransactionsManager().getFirstAidsCRUD().getAilment(getFirstAidId());
     }
 
     /**
@@ -39,6 +57,11 @@ public class FirstAidsFragment extends FragmentWrapper {
     @Override
     public void receiveBundle() {
 
+        if (getArguments() != null) {
+            int firstAidId = getArguments().getInt(Intents.Extras.EXTRA_FIRST_AID_ID);
+            setFirstAidId(firstAidId);
+            createFirstAidInfos();
+        }
     }
 
     /**
@@ -62,7 +85,9 @@ public class FirstAidsFragment extends FragmentWrapper {
      */
     @Override
     public View initFragmentViews(View view) {
-        return null;
+        mLvFirstAid = (ListView) view.findViewById(R.id.fragment_firstaids_listView_first_aid_infos);
+        mLvFirstAid.setAdapter(new FirstAidsAdapter(getActivity(), R.layout.list_firstaids, simpleFirstAidInfoList));
+        return view;
     }
 
     /**
@@ -143,6 +168,76 @@ public class FirstAidsFragment extends FragmentWrapper {
      */
     @Override
     public int getParentLayout() {
-        return 0;
+        return R.layout.fragment_firstaids;
+    }
+
+
+    public void setFirstAidId(int firstAidId) {
+        this.firstAidId = firstAidId;
+    }
+
+    public int getFirstAidId() {
+        return firstAidId;
+    }
+
+    private void createFirstAidInfos() {
+
+        simpleFirstAidInfoList = new ArrayList<>();
+
+        int firstaidId = getFirstAidId();
+        String ailment = getTransactionsManager().getFirstAidsCRUD().getAilment(firstaidId);
+        String ailmentInformation = getTransactionsManager().getFirstAidsCRUD().getAilmentInformation(firstaidId);
+        String ailmentCauses = getTransactionsManager().getFirstAidsCRUD().getAilmentCauses(firstaidId);
+        String ailmentPrevention = getTransactionsManager().getFirstAidsCRUD().getAilmentPrevention(firstaidId);
+        String ailmentSigns = getTransactionsManager().getFirstAidsCRUD().getAilmentSigns(firstaidId);
+        String ailmentSymptoms = getTransactionsManager().getFirstAidsCRUD().getAilmentSymptoms(firstaidId);
+        String ailmentCautions = getTransactionsManager().getFirstAidsCRUD().getAilmentCautions(firstaidId);
+        String ailmentMedication = getTransactionsManager().getFirstAidsCRUD().getAilmentMedication(firstaidId);
+        String ailmentTreatment = getTransactionsManager().getFirstAidsCRUD().getAilmentTreatment(firstaidId);
+        String ailmentTreatmentPrecautions = getTransactionsManager().getFirstAidsCRUD().getAilmentTreatmentPrecautions(firstaidId);
+        String ailmentTreatmentPosition = getTransactionsManager().getFirstAidsCRUD().getAilmentTreatmentPosition(firstaidId);
+        String ailmentShortNotes = getTransactionsManager().getFirstAidsCRUD().getAilmentShortNotes(firstaidId);
+
+
+        /*
+        * This is nolonger needed since the ailment is added as the title for the activity
+        *if (!ailment.equals("")) {
+          *  simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Ailment", ailment));
+        *}
+        *
+        * */
+        if (ailmentInformation.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Do you know " , ailmentInformation));
+        }
+        if (!ailmentCauses.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Causes", ailmentCauses));
+        }
+        if (!ailmentPrevention.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Prevention", ailmentPrevention));
+        }
+        if (!ailmentSigns.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Signs", ailmentSigns));
+        }
+        if (!ailmentSymptoms.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Symptoms", ailmentSymptoms));
+        }
+        if (!ailmentCautions.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Cautions", ailmentCautions));
+        }
+        if (!ailmentMedication.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Medication", ailmentMedication));
+        }
+        if (!ailmentTreatment.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Treatment", ailmentTreatment));
+        }
+        if (!ailmentTreatmentPrecautions.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Precautions", ailmentTreatmentPrecautions));
+        }
+        if (!ailmentTreatmentPosition.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Treatment Position", ailmentTreatmentPosition));
+        }
+        if (!ailmentShortNotes.equals("")) {
+            simpleFirstAidInfoList.add(new SimpleFirstAidInfo("Remember", ailmentShortNotes));
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.marvik.apps.coreutils.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.marvik.apps.wherethereisnodoc.R;
+import com.marvik.apps.wherethereisnodoc.database.transactionsmanager.manager.TransactionsManager;
 import com.marvik.apps.wherethereisnodoc.utilities.Utilities;
 
 /**
@@ -24,6 +26,7 @@ public abstract class FragmentWrapper extends Fragment {
     private OnCreateFragment onCreateFragment;
 
     private Utilities utilities;
+    private TransactionsManager transactionsManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,12 +53,19 @@ public abstract class FragmentWrapper extends Fragment {
         super.onResume();
         onResumeFragment();
         performPartialSync();
-       // onCreateFragment.setActivityTitle(getActivityTitle());
+        onCreateFragment.setActivityTitle(getActivityTitle());
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        onCreateFragment = (OnCreateFragment) getActivity();
+        onAttachFragment();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
         onCreateFragment = (OnCreateFragment) getActivity();
         onAttachFragment();
     }
@@ -182,8 +192,13 @@ public abstract class FragmentWrapper extends Fragment {
         return utils;
     }
 
+    public TransactionsManager getTransactionsManager() {
+        return transactionsManager;
+    }
+
     private void initAll() {
         utils = new Utilities(getActivity());
+        transactionsManager = new TransactionsManager(getActivity());
 
     }
 

@@ -1,11 +1,12 @@
 package com.marvik.apps.coreutils.activities;
 
+import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.marvik.apps.wherethereisnodoc.R;
 import com.marvik.apps.wherethereisnodoc.utilities.Utilities;
 
 /**
@@ -21,7 +22,7 @@ public abstract class ActivityWrapper extends AppCompatActivity implements View.
      *
      * @return an instance of the utils class
      */
-    public Utilities getUtils() {
+    public Utilities getUtilities() {
         return utils;
     }
 
@@ -54,7 +55,16 @@ public abstract class ActivityWrapper extends AppCompatActivity implements View.
 
     @Override
     public void setActivityTitle(String activityTitle) {
-        mActivityTitle.setText(activityTitle);
+        if(activityTitle == null){
+            setTitle(getUtilities().getString(R.string.app_name));
+            return;
+        }
+        setTitle(activityTitle);
+    }
+
+    @Override
+    public void onBackPressed() {
+        detachFragment();
     }
 
     /**
@@ -80,29 +90,41 @@ public abstract class ActivityWrapper extends AppCompatActivity implements View.
      */
     protected abstract void onDestroyActivity();
 
+    /**
+     *
+     */
+    public abstract int getFragmentsContainerId();
+
+
     private void initAll() {
         utils = new Utilities(ActivityWrapper.this);
-        attachActionBar();
     }
 
-    private View customActionBar;
-    private ImageView mDrawerHandle;
-    private TextView mActivityTitle;
-
-    private void attachActionBar() {
-
-
-    }
-
-
-    public View getDrawerHandle() {
-        return mDrawerHandle;
-    }
-
-    @Override
-    public void onClick(View v) {
+    public void attachFragment(@NonNull Fragment fragment, boolean addToBackStack) {
+        if (addToBackStack)
+            getFragmentManager().beginTransaction().replace(getFragmentsContainerId(), fragment).addToBackStack(getPackageName()).commit();
+        else
+            getFragmentManager().beginTransaction().replace(getFragmentsContainerId(), fragment).commit();
 
     }
 
+    private void clearBackStack() {
+        if (getFragmentManager().getBackStackEntryCount() > 1) {
+            getFragmentManager().popBackStackImmediate();
+        }
 
+    }
+
+    private void clearBackStackAll() {
+        int backStacks = getFragmentManager().getBackStackEntryCount();
+        for (int i = backStacks; i < 0; i--) {
+            getFragmentManager().popBackStack();
+        }
+    }
+
+    private void detachFragment() {
+        if (getFragmentManager().getBackStackEntryCount() > 1)
+            getFragmentManager().popBackStack();
+        else finish();
+    }
 }

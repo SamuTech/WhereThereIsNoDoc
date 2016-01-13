@@ -3,8 +3,7 @@ package com.marvik.apps.wherethereisnodoc.utilities;
 import android.content.Context;
 
 import com.marvik.apps.coreutils.utils.Utils;
-import com.marvik.apps.wherethereisnodoc.database.transactionsmanager.TransactionsManager;
-import com.marvik.apps.wherethereisnodoc.database.transactionsmanager.dataqueries.DataQueries;
+import com.marvik.apps.wherethereisnodoc.datasync.tests.TestSyncExecutor;
 import com.marvik.apps.wherethereisnodoc.webservices.manager.WebServicesManager;
 
 /**
@@ -12,11 +11,9 @@ import com.marvik.apps.wherethereisnodoc.webservices.manager.WebServicesManager;
  */
 public class Utilities extends Utils {
 
-    private TransactionsManager transactionsManager;
+    private TestSyncExecutor testSyncExecutor;
 
     private WebServicesManager webServicesManager;
-
-    private DataQueries dataQueries;
 
     private Context context;
 
@@ -28,10 +25,6 @@ public class Utilities extends Utils {
 
     }
 
-    public TransactionsManager getTransactionsManager() {
-        return transactionsManager;
-    }
-
     public Utils getUtils() {
         return this;
     }
@@ -40,17 +33,16 @@ public class Utilities extends Utils {
         return webServicesManager;
     }
 
-    public DataQueries getDataQueries() {
-        return dataQueries;
-    }
-
     public Context getContext() {
         return context;
     }
 
+    public TestSyncExecutor getTestSyncExecutor() {
+        return testSyncExecutor;
+    }
+
     private void initAll() {
+        testSyncExecutor = new TestSyncExecutor(getContext());
         webServicesManager = new WebServicesManager(getContext());
-        transactionsManager = new TransactionsManager(getContext());
-        dataQueries = new DataQueries(getContext());
     }
 }

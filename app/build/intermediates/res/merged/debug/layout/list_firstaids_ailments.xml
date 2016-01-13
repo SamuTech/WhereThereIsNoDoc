@@ -11,5 +11,5 @@
         android:padding="10dp"
         android:text="@string/first_aid_ailments"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/holo_green_dark" />
+        android:textColor="@android:color/black" />
 </LinearLayout><!-- From: file:/G:/4thYr/WhereThereIsNoDoc/app/src/main/res/layout/list_firstaids_ailments.xml -->

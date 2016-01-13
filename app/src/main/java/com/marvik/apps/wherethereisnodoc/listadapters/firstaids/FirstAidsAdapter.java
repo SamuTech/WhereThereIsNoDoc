@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.marvik.apps.coreutils.listadapters.ListsBaseAdapter;
 import com.marvik.apps.wherethereisnodoc.R;
-import com.marvik.apps.wherethereisnodoc.datamodels.firstaids.FirstAidsInfo;
+import com.marvik.apps.wherethereisnodoc.datamodels.firstaids.SimpleFirstAidInfo;
 
 import java.util.List;
 
@@ -17,11 +17,11 @@ public class FirstAidsAdapter extends ListsBaseAdapter {
 
     private TextView mTvTitle;
     private TextView mTvDescription;
-    private List<FirstAidsInfo> firstAids;
+    private List<SimpleFirstAidInfo> firstAids;
 
-    public FirstAidsAdapter(Context context, int layout,  List<? super Object> listItems) {
-        super( context,layout, listItems);
-        this.firstAids = firstAids;
+    public FirstAidsAdapter(Context context, int layout, List<?> listItems) {
+        super(context, layout, listItems);
+        this.firstAids = (List<SimpleFirstAidInfo>) listItems;
     }
 
     @Override
@@ -32,10 +32,11 @@ public class FirstAidsAdapter extends ListsBaseAdapter {
 
     @Override
     public void createCustomListView(int position) {
-        mTvTitle.setText(getFirstAids().get(position).ailment);
+        mTvTitle.setText(getFirstAids().get(position).getFirstAidItemTitle());
+        mTvDescription.setText(getFirstAids().get(position).getFirstAidItemDescription());
     }
 
-    public List<FirstAidsInfo> getFirstAids() {
+    public List<SimpleFirstAidInfo> getFirstAids() {
         return firstAids;
     }
 }

@@ -6,4 +6,6 @@ package com.marvik.apps.coreutils.intents;
 public class Intents {
 
 
+    public class Broadcasts {
+    }
 }

@@ -1,15 +1,21 @@
 package com.marvik.apps.wherethereisnodoc.fragments.firstaidsailments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.marvik.apps.coreutils.fragments.FragmentWrapper;
 import com.marvik.apps.wherethereisnodoc.R;
 import com.marvik.apps.wherethereisnodoc.datamodels.firstaids.FirstAidsInfo;
+import com.marvik.apps.wherethereisnodoc.intents.Intents;
 import com.marvik.apps.wherethereisnodoc.listadapters.firstaids.ailments.FirstAidsAilmentsAdapter;
 
 import java.util.List;
@@ -20,8 +26,15 @@ import java.util.List;
  */
 public class FirstAidAilmentsFragment extends FragmentWrapper {
 
+    //list view that holds all the ailments with first aids
     private ListView mLvAilments;
 
+    //callbacks called when events occurs
+    private FirstAidAilmentsItemClickCallbacks firstAidAilmentsItemClickCallbacks;
+
+    //List of all ailments with first aids
+
+    private List<FirstAidsInfo> firstAidsAilmentsList;
 
     /**
      * Called when the fragment is created
@@ -30,7 +43,7 @@ public class FirstAidAilmentsFragment extends FragmentWrapper {
      */
     @Override
     public void onCreateFragment(@Nullable Bundle savedInstanceState) {
-
+        getActivity().registerReceiver(receiver, new IntentFilter(Intents.Broadcasts.ACTION_NEW_FIRST_AID_ADDED));
     }
 
     /**
@@ -73,6 +86,7 @@ public class FirstAidAilmentsFragment extends FragmentWrapper {
     @Override
     public View initFragmentViews(View view) {
         mLvAilments = (ListView) view.findViewById(R.id.fragment_firstaid_ailments_listView_ailments);
+        mLvAilments.setOnItemClickListener(firstAidAilmentsClickListener);
         return view;
     }
 
@@ -90,8 +104,8 @@ public class FirstAidAilmentsFragment extends FragmentWrapper {
     @Override
     public void attachViewsData() {
 
-        List<FirstAidsInfo> firstAidsAilmentsList = getUtilities().getDataQueries().getAllFistAids();
-        
+        firstAidsAilmentsList = getTransactionsManager().getAllFistAids();
+
         mLvAilments.setAdapter(new FirstAidsAilmentsAdapter(getActivity(), R.layout.list_firstaids_ailments, firstAidsAilmentsList));
     }
 
@@ -101,7 +115,7 @@ public class FirstAidAilmentsFragment extends FragmentWrapper {
      */
     @Override
     public void onAttachFragment() {
-
+        firstAidAilmentsItemClickCallbacks = (FirstAidAilmentsItemClickCallbacks) getActivity();
     }
 
 
@@ -122,7 +136,7 @@ public class FirstAidAilmentsFragment extends FragmentWrapper {
     @Override
     public void performPartialSync() {
         //Fetch First Aids
-        getUtilities().getWebServicesManager().testSyncFirstAids(getUtilities());
+        getTransactionsManager().getUtils().getWebServicesManager().testSyncFirstAids(getTransactionsManager());
     }
 
     /**
@@ -149,7 +163,7 @@ public class FirstAidAilmentsFragment extends FragmentWrapper {
      */
     @Override
     public void onDestroyFragment() {
-
+        getActivity().unregisterReceiver(receiver);
     }
 
     /**
@@ -161,5 +175,27 @@ public class FirstAidAilmentsFragment extends FragmentWrapper {
     public int getParentLayout() {
         return R.layout.fragment_firstaid_ailments;
     }
+
+    public interface FirstAidAilmentsItemClickCallbacks {
+        void onFirstAidAilmentsClick(int firstAidId);
+    }
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intents.Broadcasts.ACTION_NEW_FIRST_AID_ADDED)) {
+                onPerformPartialSync();
+            }
+        }
+    };
+    private AdapterView.OnItemClickListener firstAidAilmentsClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (parent == mLvAilments) {
+                int firstAidId = firstAidsAilmentsList.get(position).getFirstaidId();
+                firstAidAilmentsItemClickCallbacks.onFirstAidAilmentsClick(firstAidId);
+            }
+        }
+    };
 
 }

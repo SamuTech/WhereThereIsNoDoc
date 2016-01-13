@@ -1853,9 +1853,10 @@ containing a value of this type.
         public static final int account_type=0x7f060012;
         public static final int app_name=0x7f060013;
         public static final int first_aid_ailments=0x7f060014;
-        public static final int fragment_firstaidsailments=0x7f060015;
-        public static final int item_description=0x7f060016;
-        public static final int item_title=0x7f060017;
+        public static final int fragment_firstaids=0x7f060015;
+        public static final int fragment_firstaidsailments=0x7f060016;
+        public static final int item_description=0x7f060017;
+        public static final int item_title=0x7f060018;
         public static final int status_bar_notification_info_overflow=0x7f060011;
     }
     public static final class style {

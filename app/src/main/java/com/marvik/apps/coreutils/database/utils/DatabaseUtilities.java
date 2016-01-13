@@ -62,7 +62,7 @@ public class DatabaseUtilities {
         return isExists;
     }
 
-    private String getColumnsValues(@NonNull Uri uri, @NonNull String[] index, @NonNull String[] indexColumn, String targetColumn) {
+    public String getColumnsValues(@NonNull Uri uri, @NonNull String[] index, @NonNull String[] indexColumn, String targetColumn) {
         String where = null;
         if (index.length == 0 && indexColumn.length == 0) {
             where = null;

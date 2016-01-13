@@ -610,9 +610,10 @@ int string abc_toolbar_collapse_description 0x7f060010
 int string account_type 0x7f060012
 int string app_name 0x7f060013
 int string first_aid_ailments 0x7f060014
-int string fragment_firstaidsailments 0x7f060015
-int string item_description 0x7f060016
-int string item_title 0x7f060017
+int string fragment_firstaids 0x7f060015
+int string fragment_firstaidsailments 0x7f060016
+int string item_description 0x7f060017
+int string item_title 0x7f060018
 int string status_bar_notification_info_overflow 0x7f060011
 int style AlertDialog_AppCompat 0x7f08007a
 int style AlertDialog_AppCompat_Light 0x7f08007b
